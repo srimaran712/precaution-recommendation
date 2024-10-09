@@ -14,7 +14,7 @@ function SearchQuery() {
         e.preventDefault()
         setLoading(true)
         try{
-            const response= await axios.post('http://localhost:8080/news',{email,query})
+            const response= await axios.post('https://precaution-recommendation.onrender.com/news',{email,query})
             console.log(response.data.news)
             setContent(response.data.news)
             setLoading(false)
