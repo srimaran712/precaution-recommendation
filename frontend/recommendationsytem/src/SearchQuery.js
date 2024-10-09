@@ -36,7 +36,7 @@ function SearchQuery() {
     <div className="  rounded-lg p-8 w-full ">
       <form onSubmit={searchQuery} className="space-y-6 w-full">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 ">Type Your Email</label>
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700 ">You want your search query in your email, just Write!</label>
           <input
             type="email"
             value={email}
