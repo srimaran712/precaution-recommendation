@@ -109,8 +109,8 @@ const fetchQuery= async(query)=>{
      const mailOptions = {
          from: process.env.MY_EMAIL,
          to:email,
-         subject:"News Summary from my Precaution AI",
-         text:`Hello Fellows! I'm Srinivasan AI assistant. this email purely intends on testing purpose.\n ${news}`
+         subject:"News Summary from Precaution AI",
+         text:`Hello Fellows! I'm Srinivasan's AI Assistant. This email purely intends for Testing purpose. Please Ignore! \n ${news}`
         
         
       
