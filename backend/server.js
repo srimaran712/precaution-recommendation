@@ -59,12 +59,12 @@ const fetchQuery= async(query)=>{
     
     return new Promise((resolve, reject) => {
         getJson({
-            engine: "duckduckgo",
+            engine: "duckduckgo_news",
             q: query,
             kl: "us-en",
             api_key:"bc26598ec521e89f6df4b644c7d50c22cab39fb3bd05490b3eadfadaf85f2276",
         }, (json) => {
-            const news= json.organic_results[0].title
+            const news= json.news_results[0].title
             console.log(news)
 
             if (!news) {
