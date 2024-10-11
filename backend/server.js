@@ -4,6 +4,7 @@ const Nodemailer= require('nodemailer')
 const BodyParser= require('body-parser')
 require('dotenv').config()
 const Axios =require('axios')
+const { getJson } = require("serpapi");
 
 //importing gemini 
 const { GoogleGenerativeAI } = require("@google/generative-ai");
@@ -35,28 +36,56 @@ const gemini=async(news)=>{
 
 ///fetching the query here
 const fetchQuery= async(query)=>{
-    const url = `https://api.duckduckgo.com/?q=${query}&format=json&no_html=1&no_redirect=1&skip_disambig=1`;
-    console.log('Query:', query);
-    try {
-        const response = await Axios.get(url);
-         // Log the entire response
+    // const url = `https://api.duckduckgo.com/?q=${query}&format=json&no_html=1&no_redirect=1&skip_disambig=1`;
+    // console.log('Query:', query);
+    // try {
+    //     const response = await Axios.get(url);
+    //      // Log the entire response
 
-        const news = response.data.RelatedTopics[0]?.Text;
-        console.log(news)
-        if (!news) {
-            return null;
-        }
-        const output =await gemini(news)
-        if(!output){
-            return null
-        }
-        return output;
-    } catch (error) {
-        console.error('Error fetching query:', error);
-        return null; // Return null if there is an error
-    }
+    //     const news = response.data.RelatedTopics[0]?.Text;
+    //     console.log(news)
+    //     if (!news) {
+    //         return null;
+    //     }
+    //     const output =await gemini(news)
+    //     if(!output){
+    //         return null
+    //     }
+    //     return output;
+    // } catch (error) {
+    //     console.error('Error fetching query:', error);
+    //     return null; // Return null if there is an error
+    // }
     
-         
+    return new Promise((resolve, reject) => {
+        getJson({
+            engine: "duckduckgo",
+            q: query,
+            kl: "us-en",
+            api_key:"bc26598ec521e89f6df4b644c7d50c22cab39fb3bd05490b3eadfadaf85f2276",
+        }, (json) => {
+            const news= json.organic_results[0].title
+            console.log(news)
+
+            if (!news) {
+                reject(new Error('News not found'));
+                return;
+            }
+
+            gemini(news)
+                .then(output => {
+                    if (!output) {
+                        reject(new Error('No output from Gemini'));
+                        return;
+                    }
+                    resolve(output); // Resolve the promise with the output
+                })
+                .catch(err => {
+                    reject(err); // Handle errors from gemini
+                });
+        });
+    });
+    
 
 }
 
