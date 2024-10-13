@@ -22,13 +22,13 @@ const History = (props) => {
       fetchData()
     },[])
   return (
-    <div className="w-96 shadow-md">
+    <div className="w-96 shadow-md h-screen overflow-y-scroll">
       <button className="text-xl px-2 py-1 font-semibold border mt-2 ml-4" onClick={()=>props.setOpenTab(false)}>X</button>
 
       <h2 className="text-lg text-gray-900 font-bold text-center">Search History</h2>
       {history.map((items)=>{
         return (
-          <div className="px-2 py-4">
+          <div className="px-2 py-4  ">
           <h2 className="font-semibold p-1">{items.createdAt}</h2>
           <p className="text-md text-gray-500">{items.newsResults}</p></div>
         )
