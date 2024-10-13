@@ -2,14 +2,16 @@ import React from 'react'
 import {useState} from 'react'
 import axios from 'axios'
 import Output from './Output'
+import {db} from './firebaseinit'
+import { collection, addDoc } from "firebase/firestore";
 
-function SearchQuery() {
+function SearchQuery({setOpenTab}) {
     const[email,setEmail]=useState('')
     const[query,setQuery]=useState('')
     const[content,setContent]=useState('')
     const[loading,setLoading]=useState(false)
     const[show,setShow]=useState(false)
-    
+  
     const searchQuery= async(e)=>{
         e.preventDefault()
         setLoading(true)
@@ -17,6 +19,12 @@ function SearchQuery() {
             const response= await axios.post('https://precaution-recommendation.onrender.com/news',{email,query})
             console.log(response.data.news)
             setContent(response.data.news)
+            ///adding to firestore of this news
+            const docRef = await addDoc(collection(db, "news"), {
+              newsResults: response.data.news,
+              createdAt:new Date().toLocaleString()
+            });
+            console.log("Document written with ID: ", docRef.id);
             setLoading(false)
             setShow(true)
             setTimeout(()=>{
@@ -31,9 +39,14 @@ function SearchQuery() {
     }
     
   return (
-    <div className="flex flex-col  justify-start min-h-screen bg-gray-100 ">
-    <h1 className="text-3xl font-bold text-gray-800 mb-6 mt-2 text-center">Precaution Recommendation System</h1>
+    <div className="flex flex-col  justify-start min-h-screen bg-gray-100 w-full">
+      <div className="flex justify-center items-center space-x-12">  
+          <h1 className="text-3xl font-bold text-gray-800 mb-6 mt-2 text-center">Precaution Recommendation System</h1>
+          <button className="ml-10 bg-black text-white py-2 px-2" onClick={()=> setOpenTab(true)}>Search history</button>
+      </div>
+
     <div className="  rounded-lg p-8 w-full ">
+     
       <form onSubmit={searchQuery} className="space-y-6 w-full">
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700 ">You want your search query in your email, just Write!</label>
